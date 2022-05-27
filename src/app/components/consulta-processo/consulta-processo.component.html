@@ -1,0 +1,231 @@
+<div class="container py-5">
+  <div>
+    <div class="mt-4">
+      <h1>Consultar Processos</h1>
+      <div class="input-group" style="max-width: 300px; float: right">
+        <input
+          style="border-right: none"
+          type="text"
+          oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
+          class="form-control"
+          placeholder="Número do Processo"
+          [(ngModel)]="numeroProcesso"
+        />
+        <span
+          class="input-group-text"
+          style="background-color: transparent; border-left: none"
+          ><fa-icon [icon]="faSearch"></fa-icon
+        ></span>
+      </div>
+    </div>
+    <div class="mt-1">
+      <table class="table table-hover table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Número do processo</th>
+            <th scope="col">Nome do processo</th>
+            <th scope="col">Detalhes do processo</th>
+            <th scope="col">Réu</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let processo of processos | filter: numeroProcesso">
+            <th>{{ processo.codeProcess }}</th>
+            <th>{{ processo.nameProcess }}</th>
+            <th style="max-width: 250px">{{ processo.detailsProcess }}</th>
+            <th>{{ processo.reuProcess }}</th>
+            <th>
+              <button
+                type="button"
+                class="btn btn-warning btn-sm espaco"
+                title="Editar Processo"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal2"
+                (click)="dadosProcesso(processo)"
+              >
+                <fa-icon [icon]="faPenToSquare"></fa-icon>
+              </button>
+              <button
+                *ngIf="processo.reuProcess"
+                type="button"
+                class="btn btn-info btn-sm espaco"
+                title="Editar Réu"
+                (click)="dadosReu(processo)"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+              >
+                <fa-icon [icon]="faScaleBalanced"></fa-icon></button
+              ><button
+                *ngIf="!processo.reuProcess"
+                type="button"
+                class="btn btn-info btn-sm espaco"
+                title="Adicionar Réu"
+                (click)="dadosReu(processo)"
+                data-bs-toggle="modal"
+                data-bs-target="#exampleModal"
+              >
+                <fa-icon [icon]="faScaleBalanced"></fa-icon>
+              </button>
+              <button
+                type="button"
+                class="btn btn-danger btn-sm espaco"
+                title="Excluir processo"
+                (click)="removerProcesso(processo.id, processo.codeProcess)"
+              >
+                <fa-icon [icon]="faTrashCan"></fa-icon>
+              </button>
+            </th>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal edição reu-->
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span
+          class="modal-title"
+          id="exampleModalLabel"
+          *ngIf="editarReu.reuProcess"
+          >Editar Réu</span
+        >
+        <span
+          class="modal-title"
+          id="exampleModalLabel"
+          *ngIf="!editarReu.reuProcess"
+          >Adicionar Réu</span
+        >
+        <button
+          id="fecharModal"
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3 align-items-center">
+          <div class="col-auto">
+            <label class="col-form-label">Processo:</label>
+          </div>
+          <div class="col-auto">
+            <input
+              type="text"
+              class="form-control"
+              readonly
+              [value]="editarReu.codeProcess"
+            />
+          </div>
+        </div>
+        <div class="row g-3 align-items-center mt-2">
+          <div class="col-auto">
+            <label class="col-form-label">Réu:</label>
+          </div>
+          <div class="col-auto">
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="editarReu.reuProcess"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+          Fechar
+        </button>
+        <button
+          type="button"
+          class="btn btn-success"
+          (click)="editarAdicionarReu(editarReu)"
+        >
+          Salvar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal2 - edição do processo -->
+<div
+  class="modal fade"
+  id="exampleModal2"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel2"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="modal-title" id="exampleModalLabel">Editar Processo</span>
+        <button
+          id="fecharModal"
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="row g-3 align-items-center">
+          <div class="col-auto">
+            <label class="col-form-label">Número do Processo:</label>
+          </div>
+          <div class="col-auto">
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="processo.codeProcess"
+            />
+          </div>
+        </div>
+        <div class="row g-3 align-items-center mt-2">
+          <div class="col-auto">
+            <label class="col-form-label">Descrição:</label>
+          </div>
+          <div class="col-auto">
+            <input
+              type="text"
+              class="form-control"
+              [(ngModel)]="processo.nameProcess"
+            />
+          </div>
+        </div>
+        <div class="row g-3 align-items-center mt-2">
+          <div class="col-auto">
+            <label class="col-form-label">Descrição:</label>
+          </div>
+          <div class="col-auto">
+            <textarea
+              class="form-control"
+              [(ngModel)]="processo.detailsProcess"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+          Fechar
+        </button>
+        <button
+          type="button"
+          class="btn btn-success"
+          (click)="editProcesso(processo)"
+        >
+          Salvar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

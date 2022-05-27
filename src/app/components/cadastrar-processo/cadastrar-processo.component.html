@@ -1,0 +1,59 @@
+<div class="container py-5">
+  <div>
+    <div class="mt-4">
+      <h1>Cadastrar Processos</h1>
+    </div>
+    <form>
+      <div class="mb-3">
+        <label for="exampleInputEmail1" class="form-label"
+          >Código do processo:
+          <span style="font-weight: bolder; color: red">*</span>
+        </label>
+        <input
+          type="number"
+          oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*?)\..*/g, '$1');"
+          class="form-control"
+          [(ngModel)]="processo.codeProcess"
+          [ngModelOptions]="{ standalone: true }"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Nome do Processo: </label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="processo.nameProcess"
+          [ngModelOptions]="{ standalone: true }"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Detalhes do Processo: </label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="processo.detailsProcess"
+          [ngModelOptions]="{ standalone: true }"
+        />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Réu: </label>
+        <input
+          type="text"
+          class="form-control"
+          [(ngModel)]="processo.reuProcess"
+          [ngModelOptions]="{ standalone: true }"
+        />
+      </div>
+      <button
+        type="submit"
+        class="btn btn-primary"
+        (click)="cadastarProcesso(processo)"
+        [ngClass]="{
+          disabled: !processo.codeProcess
+        }"
+      >
+        Enviar
+      </button>
+    </form>
+  </div>
+</div>
